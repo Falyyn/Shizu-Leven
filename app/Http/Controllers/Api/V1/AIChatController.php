@@ -30,13 +30,19 @@ class AIChatController extends Controller
             return response()->json(['message' => 'Gemini API key is not configured.'], 500);
         }
 
-        // Ambil data inventory dari Google Sheets (bukan SQLite)
-        $inventoryContext = '(Data kosong)';
-        $sheetsData = $this->sheetsService->syncAction('read');
+        // Ambil data inventory dari MySQL
+        $items = \App\Models\InventoryItem::with(['category', 'location'])->get()->map(function($item) {
+            return [
+                'ID_Barang' => $item->component_id,
+                'Nama' => $item->name,
+                'Kategori' => $item->category ? $item->category->name : '-',
+                'Lokasi' => $item->location ? $item->location->name : '-',
+                'Jumlah' => $item->quantity,
+                'Kondisi' => $item->condition
+            ];
+        });
 
-        if ($sheetsData && isset($sheetsData['status']) && $sheetsData['status'] === 'success') {
-            $inventoryContext = json_encode($sheetsData['data']);
-        }
+        $inventoryContext = $items->isEmpty() ? '(Data kosong)' : json_encode($items->toArray());
 
         $systemInstruction = "Kamu adalah asisten teknis Shizu Leven. Ini database komponen elektronik/IoT pengguna:\n\n{$inventoryContext}\n\nJawab pertanyaan berikut HANYA berdasarkan stok yang ada, sebutkan lokasinya jika relevan, dan bantu dia merencanakan proyek dengan komponen tersebut. Jawab dengan ramah dan informatif menggunakan bahasa Indonesia.";
 

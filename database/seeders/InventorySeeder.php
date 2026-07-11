@@ -14,13 +14,13 @@ class InventorySeeder extends Seeder
         $cats = ['Microcontrollers', 'Sensors', 'Batteries', 'Actuators'];
         $categories = [];
         foreach ($cats as $cat) {
-            $categories[$cat] = Category::create(['name' => $cat])->id;
+            $categories[$cat] = Category::firstOrCreate(['name' => $cat])->id;
         }
 
         $locs = ['Drawer A-1', 'Drawer A-2', 'Box 03', 'Drawer B-2'];
         $locations = [];
         foreach ($locs as $loc) {
-            $locations[$loc] = Location::create(['name' => $loc])->id;
+            $locations[$loc] = Location::firstOrCreate(['name' => $loc])->id;
         }
 
         $items = [
@@ -32,7 +32,10 @@ class InventorySeeder extends Seeder
         ];
 
         foreach ($items as $item) {
-            InventoryItem::create($item);
+            InventoryItem::firstOrCreate(
+                ['component_id' => $item['component_id']],
+                $item
+            );
         }
     }
 }

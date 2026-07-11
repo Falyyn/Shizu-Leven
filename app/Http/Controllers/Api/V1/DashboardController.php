@@ -18,49 +18,31 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $response = $this->sheetsService->syncAction('read');
-        $items = collect([]);
+        $items = InventoryItem::with(['category', 'location'])->get();
 
-        if ($response && isset($response['status']) && $response['status'] === 'success') {
-            $items = collect($response['data']);
-        } else {
-            // fallback
-            $items = InventoryItem::all();
-            return response()->json([
-                'totalComponents' => $items->sum('quantity'),
-                'conditionStats' => [
-                    'good' => $items->where('condition', 'Good')->sum('quantity'),
-                    'repair' => $items->whereIn('condition', ['Repair', 'Low Stock'])->sum('quantity'),
-                    'broken' => $items->where('condition', 'Broken')->sum('quantity'),
-                ],
-                'recentActivity' => []
-            ]);
-        }
-
-        $totalComponents = $items->sum(function($item) {
-            return (int)($item['Jumlah'] ?? 0);
-        });
+        $totalComponents = $items->sum('quantity');
 
         $conditionStats = [
             'good' => $items->filter(function($item) {
-                return in_array(strtolower($item['Kondisi'] ?? ''), ['good', 'normal']);
-            })->sum(function($item) { return (int)($item['Jumlah'] ?? 0); }),
+                return in_array(strtolower($item->condition ?? ''), ['good', 'normal', 'baik']);
+            })->sum('quantity'),
             'repair' => $items->filter(function($item) {
-                return in_array(strtolower($item['Kondisi'] ?? ''), ['repair', 'low stock', 'rusak/normal']);
-            })->sum(function($item) { return (int)($item['Jumlah'] ?? 0); }),
+                return in_array(strtolower($item->condition ?? ''), ['repair', 'low stock', 'perbaikan', 'rusak/normal']);
+            })->sum('quantity'),
             'broken' => $items->filter(function($item) {
-                return in_array(strtolower($item['Kondisi'] ?? ''), ['broken', 'rusak']);
-            })->sum(function($item) { return (int)($item['Jumlah'] ?? 0); }),
+                return in_array(strtolower($item->condition ?? ''), ['broken', 'rusak', 'kembung / rusak']);
+            })->sum('quantity'),
         ];
 
         $categoryStatsMap = [];
         foreach ($items as $item) {
-            $cat = $item['Kategori'] ?? 'Uncategorized';
+            $cat = $item->category ? $item->category->name : 'Uncategorized';
             if (!isset($categoryStatsMap[$cat])) {
                 $categoryStatsMap[$cat] = 0;
             }
-            $categoryStatsMap[$cat] += (int)($item['Jumlah'] ?? 0);
+            $categoryStatsMap[$cat] += (int)($item->quantity ?? 0);
         }
+        
         $categoryData = [];
         foreach ($categoryStatsMap as $name => $val) {
             $categoryData[] = ['name' => $name, 'val' => $val];
@@ -68,11 +50,11 @@ class DashboardController extends Controller
 
         $recentItems = $items->reverse()->take(5)->map(function($item) {
             return [
-                'id' => $item['ID_Barang'] ?? '',
-                'name' => $item['Nama_Spesifikasi'] ?? '',
-                'quantity' => (int)($item['Jumlah'] ?? 0),
-                'location' => $item['Lokasi'] ?? '',
-                'condition' => $item['Kondisi'] ?? '',
+                'id' => $item->component_id ?? '',
+                'name' => $item->name ?? '',
+                'quantity' => (int)($item->quantity ?? 0),
+                'location' => $item->location ? $item->location->name : '',
+                'condition' => $item->condition ?? '',
             ];
         })->values();
 

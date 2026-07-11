@@ -11,7 +11,7 @@ const SettingsPage = () => {
   const [email, setEmail] = useState(user?.email || '');
   const [password, setPassword] = useState('');
   const [avatarFile, setAvatarFile] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState(user?.avatar_url ? `http://localhost:8000${user.avatar_url}` : null);
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatar_url ? `${(import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1').replace(/\/api\/v1\/?$/, '')}${user.avatar_url}` : null);
   const fileInputRef = useRef(null);
 
   useEffect(() => {

@@ -34,7 +34,7 @@ const TopBar = () => {
           
           <div className="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant/30 cursor-pointer flex items-center justify-center text-primary font-bold">
             {user?.avatar_url ? (
-              <img src={`http://localhost:8000${user.avatar_url}`} alt="Avatar" className="w-full h-full object-cover" />
+              <img src={`${(import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1').replace(/\/api\/v1\/?$/, '')}${user.avatar_url}`} alt="Avatar" className="w-full h-full object-cover" />
             ) : (
               user?.name?.substring(0, 2) || 'SL'
             )}

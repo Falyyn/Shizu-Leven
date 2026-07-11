@@ -1,0 +1,95 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@theme {
+  --color-primary: #674bb5;
+  --color-primary-container: #a78bfa;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #3c1989;
+  
+  --color-secondary: #5f5e61;
+  --color-secondary-container: #e4e1e6;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #656467;
+
+  --color-surface: #f9f9fa;
+  --color-surface-dim: #dadadb;
+  --color-surface-bright: #f9f9fa;
+  --color-on-surface: #1a1c1d;
+  --color-on-surface-variant: #494552;
+
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f3f3f4;
+  --color-surface-container: #eeeeef;
+  --color-surface-container-high: #e8e8e9;
+  --color-surface-container-highest: #e2e2e3;
+  
+  --color-outline: #7a7583;
+  --color-outline-variant: #cac4d4;
+  
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  
+  --color-zinc-900: #18181b;
+
+  --radius-sm: 0.5rem;
+  --radius-DEFAULT: 1rem;
+  --radius-md: 1.5rem;
+  --radius-lg: 2rem;
+  --radius-xl: 3rem;
+  --radius-full: 9999px;
+
+  --spacing-sidebar-width: 280px;
+  --spacing-margin-page: 2rem;
+  --spacing-gutter-grid: 1.5rem;
+  --spacing-bento-gap: 1.5rem;
+
+  --font-sans: 'Inter', sans-serif;
+  --font-headline: 'Plus Jakarta Sans', sans-serif;
+}
+
+@layer base {
+  :root {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .bento-item {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  }
+  
+  .bento-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #e2e2e3;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #cac4d4;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}

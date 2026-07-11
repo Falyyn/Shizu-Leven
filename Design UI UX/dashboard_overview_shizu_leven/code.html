@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shizu Leven - IoT Inventory Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9fa;
+        }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Custom scrollbar for clean UI */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e2e2e3; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #cac4d4; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Bento grid item hover effect */
+        .bento-item {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+        }
+        .bento-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#674bb5",
+                        "primary-container": "#a78bfa",
+                        "on-primary-container": "#3c1989",
+                        "secondary": "#5f5e61",
+                        "surface": "#f9f9fa",
+                        "on-surface": "#1a1c1d",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f3f3f4",
+                        "surface-variant": "#e2e2e3",
+                        "outline-variant": "#cac4d4",
+                        "zinc-900": "#18181b"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "sidebar-width": "100px",
+                        "gutter": "2rem"
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface overflow-x-hidden">
+<!-- Floating Dark Sidebar -->
+<aside class="fixed left-6 top-6 bottom-6 w-20 bg-zinc-900 rounded-[32px] flex flex-col items-center py-8 gap-10 shadow-2xl z-50 transition-all duration-300">
+<!-- Logo -->
+<div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center hover:bg-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-white text-3xl group-hover:rotate-45 transition-transform">star</span>
+</div>
+<!-- Main Nav -->
+<nav class="flex flex-col gap-6 flex-1">
+<div class="p-3 bg-white/10 rounded-2xl text-white cursor-pointer" title="Dashboard">
+<span class="material-symbols-outlined">dashboard</span>
+</div>
+<div class="p-3 text-zinc-500 hover:text-white transition-colors cursor-pointer" title="Inventory">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<div class="p-3 text-zinc-500 hover:text-white transition-colors cursor-pointer" title="Sensors">
+<span class="material-symbols-outlined">sensors</span>
+</div>
+<div class="p-3 text-zinc-500 hover:text-white transition-colors cursor-pointer relative" title="Analytics">
+<span class="material-symbols-outlined">analytics</span>
+<div class="absolute top-2 right-2 w-2 h-2 bg-primary-container rounded-full"></div>
+</div>
+<div class="p-3 text-zinc-500 hover:text-white transition-colors cursor-pointer" title="Security">
+<span class="material-symbols-outlined">shield</span>
+</div>
+</nav>
+<!-- Footer Nav -->
+<div class="flex flex-col gap-6 pb-2">
+<div class="p-3 text-zinc-500 hover:text-white transition-colors cursor-pointer">
+<span class="material-symbols-outlined">help</span>
+</div>
+<div class="p-3 text-zinc-500 hover:text-rose-400 transition-colors cursor-pointer">
+<span class="material-symbols-outlined">logout</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-32 mr-8 py-8 min-h-screen">
+<!-- Header Section -->
+<header class="flex justify-between items-end mb-10">
+<div>
+<h1 class="font-headline text-4xl font-bold tracking-tight text-zinc-900">Overview</h1>
+<p class="text-secondary mt-1 font-medium">Manajemen Inventaris Elektronik &amp; IoT</p>
+</div>
+<div class="flex items-center gap-4">
+<!-- Universal Search -->
+<div class="relative group">
+<input class="pl-12 pr-6 py-3 bg-white border-none rounded-full shadow-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all focus:w-80 outline-none" placeholder="Search components..." type="text"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-secondary group-focus-within:text-primary transition-colors">search</span>
+</div>
+<!-- Notification -->
+<button class="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center hover:bg-surface-container-low transition-colors relative">
+<span class="material-symbols-outlined text-zinc-600">notifications</span>
+<span class="absolute top-3 right-3 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full"></span>
+</button>
+<!-- Profile -->
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="A portrait of a young professional woman with a minimalist aesthetic, softly lit in a clean modern office environment. She is smiling gently at the camera, wearing professional neutral attire. The image style is bright, airy, and high-end light mode photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBei8ylFffZc2reLSMWlatIRWeLGNxRupmHKmkj8Y91wN1TGCEMWbLDpThlH9uzQw51RnzypKTZhCyJXFqQl00nW5CFFqhS18DBVp6KfU0og6uNSsuiguYAENyKGHlF3s8UG1omV5I1bPwomzWgoNounzU-BBcrTADZCx3O5APol-AhX70uhLb0r10HPg9W0kEApMVZlEUP74MivtJ2-Ht-hZKxmXsey87ci03PBeQqAGRMKPsEIXN"/>
+</div>
+</div>
+</header>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Column 1 & 2 (Main Charts) -->
+<div class="col-span-12 lg:col-span-9 space-y-8">
+<!-- Sales Analytics (Large Bar Chart) -->
+<section class="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] bento-item">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="font-headline text-xl font-bold text-zinc-900">Stock Analytics</h3>
+<p class="text-sm text-secondary">Inventory levels per category</p>
+</div>
+<select class="bg-surface-container-low border-none rounded-xl text-sm font-semibold px-4 py-2 focus:ring-0 cursor-pointer">
+<option>This year</option>
+<option>Last year</option>
+</select>
+</div>
+<!-- Chart Simulation -->
+<div class="flex items-end justify-between h-64 px-4 gap-2">
+<!-- Bars -->
+<div class="flex flex-col items-center flex-1 gap-4">
+<div class="w-full bg-violet-100 rounded-t-2xl relative group cursor-pointer" style="height: 60%">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-1/2 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="opacity-0 group-hover:opacity-100 absolute -top-10 bg-zinc-900 text-white text-[10px] py-1 px-2 rounded-lg whitespace-nowrap z-10">Sold: 104</div>
+</div>
+<span class="text-xs font-semibold text-secondary">Jan</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-4">
+<div class="w-full bg-violet-100 rounded-t-2xl relative" style="height: 45%"></div>
+<span class="text-xs font-semibold text-secondary">Feb</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-4">
+<div class="w-full bg-violet-100 rounded-t-2xl relative" style="height: 80%"></div>
+<span class="text-xs font-semibold text-secondary">Mar</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-4">
+<div class="w-full bg-violet-100 rounded-t-2xl relative" style="height: 40%"></div>
+<span class="text-xs font-semibold text-secondary">Apr</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-4">
+<div class="w-full bg-violet-100 rounded-t-2xl relative" style="height: 70%"></div>
+<span class="text-xs font-semibold text-secondary">May</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-4">
+<div class="w-full bg-violet-200 rounded-t-2xl relative" style="height: 55%"></div>
+<span class="text-xs font-semibold text-secondary">Jun</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-4">
+<div class="w-full bg-primary rounded-t-2xl relative shadow-lg shadow-primary/20" style="height: 90%"></div>
+<span class="text-xs font-semibold text-primary font-bold">Jul</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-4">
+<div class="w-full bg-violet-100 rounded-t-2xl relative" style="height: 65%"></div>
+<span class="text-xs font-semibold text-secondary">Aug</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-4">
+<div class="w-full bg-violet-100 rounded-t-2xl relative" style="height: 50%"></div>
+<span class="text-xs font-semibold text-secondary">Sep</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-4">
+<div class="w-full bg-violet-100 rounded-t-2xl relative" style="height: 75%"></div>
+<span class="text-xs font-semibold text-secondary">Oct</span>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Donut Chart Widget -->
+<div class="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] bento-item">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline text-lg font-bold text-zinc-900">Kondisi Komponen</h3>
+<span class="material-symbols-outlined text-secondary text-sm">more_horiz</span>
+</div>
+<div class="relative flex justify-center py-4">
+<!-- SVG Donut -->
+<svg class="w-40 h-40 transform -rotate-90">
+<circle class="text-surface-container-low" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-width="14"></circle>
+<circle class="text-primary" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-dasharray="440" stroke-dashoffset="110" stroke-width="14"></circle>
+<circle class="text-secondary-container" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-dasharray="440" stroke-dashoffset="380" stroke-width="14"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-bold text-zinc-900">75%</span>
+<span class="text-[10px] text-secondary uppercase tracking-widest font-bold">Good</span>
+</div>
+</div>
+<div class="mt-6 flex justify-around text-xs font-semibold text-secondary">
+<div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span> Normal</div>
+<div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-secondary-container"></span> Repair</div>
+<div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-surface-container-low"></span> Broken</div>
+</div>
+</div>
+<!-- Last Activity Widget -->
+<div class="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] bento-item">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline text-lg font-bold text-zinc-900">Last activity</h3>
+<span class="material-symbols-outlined text-secondary text-sm">call_made</span>
+</div>
+<div class="space-y-5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a young male engineer in a clean modern lab setting, softly lit. High-end aesthetic with neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWKzs9BK6LHQj8rs4m-8EVtZ7jeuVJTlHJ23v82NCErtG9Ik8AVYeOo2vi2noNHIJn9FXUHM3qFTCoCuMH_7cGg4BPodN3azltUwc9UPqRFRkhHBwE4BI_0Zqbt6suTyjSRXLdpuM3XofPDkkPdB4TjBJRvLrhq0CVOL_Qp-BJ4tuEwHFBZJ7yOC1AwUTR0AWbC6vtuVNpbbEn7oCzZPv1VkK0yzhYAmxXlpO1O6AzRIzbqTCPPc2T"/>
+</div>
+<div>
+<p class="text-sm font-bold text-zinc-900">Alia Bonner</p>
+<span class="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">Updated Sensor</span>
+</div>
+</div>
+<span class="text-xs font-semibold text-secondary">#513 003</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a creative professional in a bright studio. Minimalist style, high-key lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNQ2yBjzn3dFf9qiuhA42jyun3XP_5Yomd9eqRa8hTKIJyUpc5ofmQ9ZDlDNgDJX6UEG0ZxxFmp3cbFduNrMha88Mwx9TnoaaG6UdP0nrrjAhYuaHjlIkWMfElXlj_CmLi8Q8N37XAc9fVHxDQD87vI5HC5BxuxIb3u4_fG8waBYUsrN9tx1j3vJVkFrHVssb-M4rswOiKzRZkyaKGyHRajvHg-ACjGCnMm4uHGkVlNFK4yp2EdHHE"/>
+</div>
+<div>
+<p class="text-sm font-bold text-zinc-900">Kobi Potts</p>
+<span class="text-[10px] font-bold text-rose-400 uppercase tracking-tighter">Reported Broken</span>
+</div>
+</div>
+<span class="text-xs font-semibold text-secondary">#152 004</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-secondary font-bold text-xs">AC</div>
+<div>
+<p class="text-sm font-bold text-zinc-900">Austin Camacho</p>
+<span class="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">Added Module</span>
+</div>
+</div>
+<span class="text-xs font-semibold text-secondary">#486 005</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Product Sales Table -->
+<section class="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] bento-item overflow-x-auto">
+<div class="flex justify-between items-center mb-8">
+<h3 class="font-headline text-xl font-bold text-zinc-900">Daftar Komponen Terkini</h3>
+<span class="material-symbols-outlined text-secondary text-sm">filter_list</span>
+</div>
+<table class="w-full text-left">
+<thead>
+<tr class="text-secondary text-xs uppercase tracking-wider font-bold">
+<th class="pb-6 font-semibold">Item</th>
+<th class="pb-6 font-semibold">Stock</th>
+<th class="pb-6 font-semibold">Location</th>
+<th class="pb-6 font-semibold">Status</th>
+<th class="pb-6 font-semibold text-right">Price</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low">
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="py-5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-low rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">memory</span>
+</div>
+<span class="font-bold text-zinc-900">ESP32 Development Board</span>
+</div>
+</td>
+<td class="py-5 font-medium text-zinc-700">118</td>
+<td class="py-5 font-medium text-secondary">Drawer A-12</td>
+<td class="py-5">
+<span class="px-3 py-1 bg-emerald-50 text-emerald-500 text-[10px] font-bold rounded-full uppercase">Good</span>
+</td>
+<td class="py-5 text-right font-bold text-zinc-900">$5.25</td>
+</tr>
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="py-5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-low rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">sensors</span>
+</div>
+<span class="font-bold text-zinc-900">Ultrasonic Sensor HC-SR04</span>
+</div>
+</td>
+<td class="py-5 font-medium text-zinc-700">328</td>
+<td class="py-5 font-medium text-secondary">Box 03</td>
+<td class="py-5">
+<span class="px-3 py-1 bg-amber-50 text-amber-500 text-[10px] font-bold rounded-full uppercase">Low Stock</span>
+</td>
+<td class="py-5 text-right font-bold text-zinc-900">$2.10</td>
+</tr>
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="py-5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-low rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">bolt</span>
+</div>
+<span class="font-bold text-zinc-900">Logic Level Converter</span>
+</div>
+</td>
+<td class="py-5 font-medium text-zinc-700">118</td>
+<td class="py-5 font-medium text-secondary">Drawer C-01</td>
+<td class="py-5">
+<span class="px-3 py-1 bg-emerald-50 text-emerald-500 text-[10px] font-bold rounded-full uppercase">Good</span>
+</td>
+<td class="py-5 text-right font-bold text-zinc-900">$1.50</td>
+</tr>
+</tbody>
+</table>
+</section>
+</div>
+<!-- Column 3 (Right Stack Summary) -->
+<div class="col-span-12 lg:col-span-3 flex flex-col gap-8">
+<!-- Total Components (Dark Card) -->
+<div class="bg-zinc-900 rounded-3xl p-8 text-white relative overflow-hidden bento-item">
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-6">
+<h4 class="text-zinc-400 font-semibold text-sm">Total Components</h4>
+<span class="material-symbols-outlined text-white/20">grid_view</span>
+</div>
+<div class="flex items-baseline gap-2 mb-1">
+<span class="text-4xl font-bold">1.226</span>
+<span class="text-emerald-400 text-xs font-bold">+7.9%</span>
+</div>
+<p class="text-xs text-zinc-500">683 units added last month</p>
+<div class="mt-8 bg-white/5 rounded-2xl p-4 flex items-center justify-between">
+<div class="flex gap-2">
+<div class="w-1 h-8 bg-primary rounded-full"></div>
+<div class="w-1 h-8 bg-zinc-700 rounded-full"></div>
+<div class="w-1 h-8 bg-zinc-700 rounded-full"></div>
+</div>
+<div class="text-right">
+<div class="text-xs font-bold">40%</div>
+<div class="text-[8px] text-zinc-500 uppercase tracking-widest">Active</div>
+</div>
+</div>
+</div>
+<!-- Decorative background glow -->
+<div class="absolute -top-12 -right-12 w-32 h-32 bg-primary/20 blur-3xl rounded-full"></div>
+</div>
+<!-- Total Revenue (Gradient Card) -->
+<div class="bg-gradient-to-br from-primary/90 to-[#877fc1] rounded-3xl p-8 text-white bento-item relative group overflow-hidden">
+<div class="flex justify-between items-start mb-6 relative z-10">
+<h4 class="text-white/80 font-semibold text-sm">Total Assets Value</h4>
+<span class="material-symbols-outlined text-white/40">payments</span>
+</div>
+<div class="relative z-10">
+<div class="text-3xl font-bold mb-1">$12.000</div>
+<p class="text-xs text-white/60 mb-8">$15.650 last month</p>
+<!-- Mini Bar Graph -->
+<div class="flex items-end gap-1 h-12">
+<div class="flex-1 bg-white/20 rounded-t-sm h-1/2"></div>
+<div class="flex-1 bg-white/40 rounded-t-sm h-3/4"></div>
+<div class="flex-1 bg-white/20 rounded-t-sm h-1/3"></div>
+<div class="flex-1 bg-white/60 rounded-t-sm h-5/6 relative">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-zinc-900 text-white text-[8px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">$1210</div>
+</div>
+<div class="flex-1 bg-white/20 rounded-t-sm h-1/2"></div>
+<div class="flex-1 bg-white/30 rounded-t-sm h-2/3"></div>
+</div>
+</div>
+<!-- Wave pattern overlay -->
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 16px 16px;"></div>
+</div>
+<!-- Total Orders (Light/Warm Card) -->
+<div class="bg-[#fef6f0] rounded-3xl p-8 bento-item border border-[#fae8db]">
+<div class="flex justify-between items-start mb-6">
+<h4 class="text-[#8c6d59] font-semibold text-sm">Active Loans</h4>
+<span class="material-symbols-outlined text-[#8c6d59]/40">shopping_bag</span>
+</div>
+<div class="flex items-baseline gap-2 mb-1">
+<span class="text-3xl font-bold text-[#453123]">15.210</span>
+<span class="text-emerald-500 text-xs font-bold">51%</span>
+</div>
+<p class="text-xs text-[#8c6d59]/70 mb-6">$12,000 returned</p>
+<!-- Line Chart Simulation -->
+<div class="h-16 relative">
+<svg class="w-full h-full text-[#453123]" preserveaspectratio="none" viewbox="0 0 100 40">
+<path d="M0 35 Q 25 10, 50 30 T 100 5" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<circle cx="50" cy="30" fill="currentColor" r="3"></circle>
+</svg>
+</div>
+<div class="flex justify-between mt-2 text-[10px] text-[#8c6d59]/50 font-bold uppercase tracking-tighter">
+<span>1 Jul</span>
+<span>16 Jul</span>
+<span>25 Jul</span>
+</div>
+</div>
+<!-- Export CTA -->
+<button class="w-full py-5 bg-zinc-900 text-white rounded-[24px] font-bold text-sm flex items-center justify-center gap-3 hover:bg-zinc-800 transition-all active:scale-95 shadow-xl shadow-zinc-900/10">
+<span class="material-symbols-outlined text-lg">file_download</span>
+                    Export statistics
+                </button>
+</div>
+</div>
+</main>
+<!-- Floating AI Assistant Button -->
+<button class="fixed bottom-8 right-8 w-16 h-16 bg-zinc-900 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-90 transition-all group z-50">
+<span class="material-symbols-outlined text-3xl group-hover:rotate-12 transition-transform">auto_awesome</span>
+<div class="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-white">AI</div>
+</button>
+<script>
+        // Micro-interaction for sidebar expansion/hover effects
+        document.querySelectorAll('aside nav div').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.style.transform = 'scale(1.1)';
+            });
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = 'scale(1)';
+            });
+        });
+
+        // Simple search interaction simulation
+        const searchInput = document.querySelector('header input');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('shadow-md');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('shadow-md');
+        });
+    </script>
+</body></html>

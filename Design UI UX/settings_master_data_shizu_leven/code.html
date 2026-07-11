@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings / Master Data - Shizu Leven</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#f0f1f2",
+                        "background": "#f9f9fa",
+                        "on-secondary-container": "#656467",
+                        "primary": "#674bb5",
+                        "on-primary-fixed": "#21005e",
+                        "surface-container": "#eeeeef",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#5f5e61",
+                        "primary-fixed": "#e8ddff",
+                        "tertiary-fixed-dim": "#dbc839",
+                        "tertiary-fixed": "#f8e454",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#47464a",
+                        "on-primary-container": "#3c1989",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#cebdff",
+                        "on-surface": "#1a1c1d",
+                        "on-primary-fixed-variant": "#4f319c",
+                        "surface-dim": "#dadadb",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f3f3f4",
+                        "on-secondary-fixed": "#1b1b1e",
+                        "surface-bright": "#f9f9fa",
+                        "on-tertiary-fixed": "#201c00",
+                        "on-tertiary-fixed-variant": "#504700",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e2e2e3",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#494552",
+                        "on-background": "#1a1c1d",
+                        "inverse-surface": "#2f3132",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#e8e8e9",
+                        "secondary-fixed-dim": "#c8c5ca",
+                        "secondary-fixed": "#e4e1e6",
+                        "primary-fixed-dim": "#cebdff",
+                        "primary-container": "#a78bfa",
+                        "secondary-container": "#e4e1e6",
+                        "outline": "#7a7583",
+                        "surface-variant": "#e2e2e3",
+                        "surface-tint": "#674bb5",
+                        "tertiary": "#6a5f00",
+                        "on-tertiary-container": "#3b3500",
+                        "outline-variant": "#cac4d4",
+                        "tertiary-container": "#af9e00",
+                        "surface": "#f9f9fa"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter-grid": "1.5rem",
+                        "stack-sm": "0.5rem",
+                        "stack-lg": "2rem",
+                        "stack-md": "1rem",
+                        "sidebar-width": "280px",
+                        "margin-page": "2rem",
+                        "bento-gap": "1rem"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .glass-panel {
+                @apply bg-surface-container-lowest/80 backdrop-blur-xl border border-white/40 shadow-[0_8px_30px_rgb(0,0,0,0.04)];
+            }
+            .glass-panel-dark {
+                @apply bg-on-surface/90 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)];
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex antialiased">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col items-center py-8 gap-bento-gap fixed left-0 top-0 h-[calc(100%-4rem)] m-container-margin rounded-3xl w-sidebar-width bg-on-surface dark:bg-surface-container-lowest shadow-[0_8px_30px_rgb(0,0,0,0.12)] z-50">
+<div class="flex flex-col items-center mb-8 px-6 text-center">
+<div class="w-16 h-16 rounded-full bg-surface-container overflow-hidden mb-4 border-2 border-surface-container-lowest/20">
+<img alt="Lumina Logo" class="w-full h-full object-cover" data-alt="A macro shot of a sleek, minimalist glowing lavender sensor node against a dark zen-like background. The lighting is soft and moody, emphasizing the high-end industrial design of the IoT device. Professional photography style, extremely crisp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiXZbd-Mn9kKqZHxagIt08hGeBUl1T6zN-FCfng5txjcgDfpKat6EMzCA4IX61Ae0d2bQ9-gkYPCtu3KT5AkdABRKPAkGD7j6tTvXo23Ed_OyuDvkcEdmqSpvos7HVULcVe_zbA9MCFWdadBbtmxT1Ls-0cdHzPWv0loLw4zPSZeOKZB7RkSjhEBAfHrm-xKHp8r313vZ4msWFr6c1e1ZROvD-tnEbpU-mWozWkEv0NVYw24wHaINa"/>
+</div>
+<h1 class="font-headline-md text-headline-md text-surface-bright">Lumina IoT</h1>
+<p class="font-body-sm text-body-sm text-secondary-fixed-dim mt-1">Precision Systems</p>
+</div>
+<div class="w-full px-4 flex-1">
+<ul class="flex flex-col gap-2">
+<li>
+<a class="flex items-center gap-4 px-4 py-3 rounded-2xl text-secondary-fixed-dim hover:text-surface-bright hover:bg-secondary-container/10 scale-95 active:scale-90 transition-all duration-200 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-4 py-3 rounded-2xl text-secondary-fixed-dim hover:text-surface-bright hover:bg-secondary-container/10 scale-95 active:scale-90 transition-all duration-200 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span>Inventory</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-4 py-3 rounded-2xl text-secondary-fixed-dim hover:text-surface-bright hover:bg-secondary-container/10 scale-95 active:scale-90 transition-all duration-200 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="sensors">sensors</span>
+<span>Sensors</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-4 py-3 rounded-2xl text-secondary-fixed-dim hover:text-surface-bright hover:bg-secondary-container/10 scale-95 active:scale-90 transition-all duration-200 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>Analytics</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-4 py-3 rounded-2xl text-secondary-fixed-dim hover:text-surface-bright hover:bg-secondary-container/10 scale-95 active:scale-90 transition-all duration-200 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="shield">shield</span>
+<span>Security</span>
+</a>
+</li>
+</ul>
+</div>
+<div class="w-full px-4 mb-4">
+<button class="w-full py-3 bg-primary text-on-primary rounded-full font-label-md text-label-md hover:bg-primary-fixed-variant transition-colors shadow-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                Add Device
+            </button>
+</div>
+<div class="w-full px-4 mt-auto">
+<ul class="flex flex-col gap-2 pt-4 border-t border-surface-container-lowest/10">
+<li>
+<a class="flex items-center gap-4 px-4 py-3 rounded-2xl text-secondary-fixed-dim hover:text-surface-bright hover:bg-secondary-container/10 scale-95 active:scale-90 transition-all duration-200 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Support</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-4 py-3 rounded-2xl bg-primary-container text-on-primary-container scale-95 active:scale-90 transition-all duration-200 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-4 py-3 rounded-2xl text-secondary-fixed-dim hover:text-surface-bright hover:bg-secondary-container/10 scale-95 active:scale-90 transition-all duration-200 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 w-full md:ml-[calc(280px+3rem)] flex flex-col min-h-screen relative">
+<!-- TopNavBar (Mobile only for Nav, but acts as header on Desktop) -->
+<header class="flex justify-between items-center w-full px-gutter-grid py-6 bg-surface dark:bg-on-surface shadow-[0_8px_30px_rgb(0,0,0,0.04)] sticky top-0 z-40 transition-all duration-200 ease-in-out">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-3xl" data-icon="menu">menu</span>
+</button>
+<span class="font-headline-md text-headline-md font-bold text-primary md:hidden">Lumina IoT</span>
+<h2 class="hidden md:block font-headline-lg text-headline-lg text-on-surface tracking-tight">Master Data Settings</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-secondary-fixed-variant hover:text-primary transition-colors hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant p-2 rounded-full">
+<span class="material-symbols-outlined text-2xl" data-icon="notifications">notifications</span>
+</button>
+<button class="text-primary border-b-2 border-primary pb-1 p-2 transition-colors hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant rounded-full md:hidden">
+<span class="material-symbols-outlined text-2xl" data-icon="settings">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant/30 cursor-pointer">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A portrait of a professional woman in her late 30s in a bright, modern minimalist office space. Soft natural light, shallow depth of field, subtle lavender gradient background reflecting the brand colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcuEJMTw7qOtmX-QPxue9x8LzFN_uFNLdNkaxJaY2zsEsRzNZPClROfVywvbZ7e5Rli8KAVcHOSqTmv7URCKCTc51_sjF4fHL3LR04aHUvVAGHDGIE78SZcJYuQFUwu31988AXM4ImDESnwcvWSF-NDUvvpEU-goLtAXHKjI70fV9cLtAUNBDebH8ktTjsflkFV_wLhWH4xoQpH8-L2OHAjBl2OqFFs-lh2fZ5MM0ouLeLgCL0XXka"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-gutter-grid flex-1">
+<!-- Mobile Title (if hidden in top bar) -->
+<div class="mb-8 md:hidden">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Master Data Settings</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Manage your core categories, locations, and personal preferences.</p>
+</div>
+<div class="hidden md:block mb-10">
+<p class="font-body-md text-body-md text-on-surface-variant">Manage your core categories, locations, and personal preferences.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Categories & Locations -->
+<div class="lg:col-span-8 flex flex-col gap-8">
+<!-- Section 1: Categories Management -->
+<section class="glass-panel rounded-3xl p-8">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h3 class="font-label-md text-label-md text-on-surface uppercase tracking-wider text-sm opacity-70 mb-1">Taxonomy</h3>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Categories</h2>
+</div>
+<button class="bg-primary/10 text-primary hover:bg-primary/20 px-4 py-2 rounded-full font-label-md text-label-md transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span> New Category
+                            </button>
+</div>
+<div class="space-y-3">
+<!-- Category Item -->
+<div class="group flex justify-between items-center p-4 rounded-2xl hover:bg-surface-container-low transition-colors border border-transparent hover:border-outline-variant/30">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-xl bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="sensors">sensors</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">Sensors</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">42 Items</p>
+</div>
+</div>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-highest"><span class="material-symbols-outlined text-sm" data-icon="edit">edit</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors rounded-full hover:bg-error-container/50"><span class="material-symbols-outlined text-sm" data-icon="delete">delete</span></button>
+</div>
+</div>
+<!-- Category Item -->
+<div class="group flex justify-between items-center p-4 rounded-2xl hover:bg-surface-container-low transition-colors border border-transparent hover:border-outline-variant/30">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-xl bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="battery_charging_full">battery_charging_full</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">Power Supply</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">18 Items</p>
+</div>
+</div>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-highest"><span class="material-symbols-outlined text-sm" data-icon="edit">edit</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors rounded-full hover:bg-error-container/50"><span class="material-symbols-outlined text-sm" data-icon="delete">delete</span></button>
+</div>
+</div>
+<!-- Category Item -->
+<div class="group flex justify-between items-center p-4 rounded-2xl hover:bg-surface-container-low transition-colors border border-transparent hover:border-outline-variant/30">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-xl bg-secondary-container/50 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="router">router</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">Networking</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">7 Items</p>
+</div>
+</div>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-highest"><span class="material-symbols-outlined text-sm" data-icon="edit">edit</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors rounded-full hover:bg-error-container/50"><span class="material-symbols-outlined text-sm" data-icon="delete">delete</span></button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Locations Management (Bento Grid) -->
+<section class="glass-panel rounded-3xl p-8">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h3 class="font-label-md text-label-md text-on-surface uppercase tracking-wider text-sm opacity-70 mb-1">Spatial</h3>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Locations</h2>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+<!-- Location Box -->
+<div class="bg-surface-container-lowest border border-outline-variant/50 rounded-2xl p-5 hover:border-primary/50 transition-colors cursor-pointer group flex flex-col justify-between aspect-square">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="kitchen">kitchen</span>
+<button class="opacity-0 group-hover:opacity-100 text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined text-sm" data-icon="more_horiz">more_horiz</span></button>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">Drawer A-1</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-xs mt-1">Main Lab</p>
+</div>
+</div>
+<!-- Location Box -->
+<div class="bg-surface-container-lowest border border-outline-variant/50 rounded-2xl p-5 hover:border-primary/50 transition-colors cursor-pointer group flex flex-col justify-between aspect-square">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="shelves">shelves</span>
+<button class="opacity-0 group-hover:opacity-100 text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined text-sm" data-icon="more_horiz">more_horiz</span></button>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">Shelf 2</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-xs mt-1">Storage Room</p>
+</div>
+</div>
+<!-- Add Location Box -->
+<div class="bg-surface-container-low border border-dashed border-outline-variant rounded-2xl p-5 hover:bg-surface-container hover:border-primary/50 transition-colors cursor-pointer flex flex-col items-center justify-center aspect-square text-center">
+<div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-primary mb-3">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</div>
+<h4 class="font-label-md text-label-md text-on-surface">Add Location</h4>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Account Settings -->
+<div class="lg:col-span-4 flex flex-col gap-8">
+<section class="glass-panel rounded-3xl p-8 h-full">
+<div class="mb-8">
+<h3 class="font-label-md text-label-md text-on-surface uppercase tracking-wider text-sm opacity-70 mb-1">Personal</h3>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Account Settings</h2>
+</div>
+<form class="space-y-6">
+<!-- Profile Image Upload (Visual) -->
+<div class="flex flex-col items-center justify-center mb-6">
+<div class="relative group cursor-pointer">
+<div class="w-24 h-24 rounded-full bg-surface-container-highest overflow-hidden border-2 border-white shadow-sm transition-transform group-hover:scale-105">
+<img alt="User profile picture editable" class="w-full h-full object-cover" data-alt="A close up of a minimalist white desk with a subtle lavender glow from an unseen lamp, creating a clean, serene workspace vibe. Out of focus background to emphasize depth. A very modern, sleek aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVs_XT5Lgmk-bc9OTcqMEEXiiJWLyCijLplwKUFJX3p-qfovCQLlxaWT_KdmPKnRak__gNjL6YMlGmaQRQUXzHCOoIwmxi6LQfMr4nr7YPLu1kgAEJQazfH-P4eCF9ohZLKAbQsRQsJ81aub9K6zx9zPAuZCOLexUYvs9a_tNhMm1EEMI5lbUrS9kS10AhU6DQidduIHQQg4RhZq_8K3FxCbIxdmTHIeWiD4Qpg5SUUJMh2iVePVa_"/>
+</div>
+<div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white" data-icon="photo_camera">photo_camera</span>
+</div>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant block">Full Name</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-full px-5 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" type="text" value="Dr. Shizu Leven"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant block">Email Address</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-full px-5 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" type="email" value="shizu.leven@lumina-iot.com"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant block">Timezone</label>
+<select class="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-full px-5 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors appearance-none">
+<option>UTC (Coordinated Universal Time)</option>
+<option>PST (Pacific Standard Time)</option>
+<option>EST (Eastern Standard Time)</option>
+</select>
+</div>
+<div class="pt-4 border-t border-outline-variant/20 flex justify-end gap-3 mt-8">
+<button class="px-6 py-3 rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low transition-colors" type="button">Cancel</button>
+<button class="px-6 py-3 rounded-full font-label-md text-label-md bg-primary text-on-primary hover:bg-primary-fixed-variant transition-colors shadow-sm" type="button">Save Changes</button>
+</div>
+</form>
+</section>
+</div>
+</div>
+</div>
+</main>
+</body></html>

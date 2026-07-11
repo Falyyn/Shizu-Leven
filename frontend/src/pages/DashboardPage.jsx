@@ -383,15 +383,48 @@ const DashboardPage = () => {
           variant="dark" 
         />
 
-        {!isExporting && (
+        <div className="mt-auto flex flex-col gap-3">
+          {!isExporting && (
+            <button 
+              onClick={handleExport}
+              className="w-full bg-zinc-900 text-white rounded-2xl py-4 font-sans text-sm font-semibold hover:bg-zinc-800 transition-colors shadow-lg flex items-center justify-center gap-2 bento-item"
+            >
+              <span className="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+              {t('dash_export')} (PDF)
+            </button>
+          )}
+
           <button 
-            onClick={handleExport}
-            className="w-full bg-zinc-900 text-white rounded-2xl py-4 font-sans text-sm font-semibold hover:bg-zinc-800 transition-colors shadow-lg flex items-center justify-center gap-2 mt-auto bento-item"
+            onClick={() => {
+              const allInventory = inventoryItems || [];
+              const headers = ['ID_Barang', 'Nama_Spesifikasi', 'Kategori', 'Jumlah', 'Lokasi', 'Kondisi'];
+              const rows = allInventory.map(item => [
+                item.component_id || '',
+                item.name || '',
+                item.category || '',
+                item.quantity || 0,
+                item.location || '',
+                item.condition || ''
+              ]);
+              const csvContent = [
+                headers.join(','),
+                ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+              ].join('\n');
+              const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+              const link = document.createElement('a');
+              const url = URL.createObjectURL(blob);
+              link.setAttribute('href', url);
+              link.setAttribute('download', `shizu-leven-inventaris-${new Date().toISOString().slice(0, 10)}.csv`);
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }}
+            className="w-full bg-emerald-600 text-white rounded-2xl py-4 font-sans text-sm font-semibold hover:bg-emerald-700 transition-colors shadow-lg flex items-center justify-center gap-2 bento-item"
           >
-            <span className="material-symbols-outlined text-[18px]">download</span>
-            {t('dash_export')}
+            <span className="material-symbols-outlined text-[18px]">table</span>
+            Download CSV / Excel
           </button>
-        )}
+        </div>
       </div>
     </div>
   );

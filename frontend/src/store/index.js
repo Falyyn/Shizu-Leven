@@ -17,7 +17,8 @@ export const useAuthStore = create((set) => ({
       set({ user, token, isAuthenticated: true, isLoading: false });
       return true;
     } catch (err) {
-      set({ error: err.response?.data?.message || 'Login failed', isLoading: false });
+      console.error("Login API Error:", err);
+      set({ error: err.response?.data?.message || err.message || 'Login failed', isLoading: false });
       return false;
     }
   },

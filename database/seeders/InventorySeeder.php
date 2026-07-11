@@ -11,31 +11,46 @@ class InventorySeeder extends Seeder
 {
     public function run(): void
     {
-        $cats = ['Microcontrollers', 'Sensors', 'Batteries', 'Actuators'];
-        $categories = [];
-        foreach ($cats as $cat) {
-            $categories[$cat] = Category::firstOrCreate(['name' => $cat])->id;
+        $csvFile = base_path('Database_Final_Elektronik_IoT - Inventaris.csv');
+        if (!file_exists($csvFile)) {
+            $this->command->error("CSV file not found: $csvFile");
+            return;
         }
 
-        $locs = ['Drawer A-1', 'Drawer A-2', 'Box 03', 'Drawer B-2'];
-        $locations = [];
-        foreach ($locs as $loc) {
-            $locations[$loc] = Location::firstOrCreate(['name' => $loc])->id;
-        }
+        $file = fopen($csvFile, 'r');
+        $header = fgetcsv($file); // Read the header row
 
-        $items = [
-            ['component_id' => 'MCU-0921', 'name' => 'ESP32-WROOM-32U', 'category_id' => $categories['Microcontrollers'], 'location_id' => $locations['Drawer A-1'], 'condition' => 'Good', 'quantity' => 142, 'price' => 5.25],
-            ['component_id' => 'PWR-1104', 'name' => 'Li-Po 3.7V 2000mAh', 'category_id' => $categories['Batteries'], 'location_id' => $locations['Box 03'], 'condition' => 'Low Stock', 'quantity' => 12, 'price' => 8.50],
-            ['component_id' => 'SNR-8820', 'name' => 'DHT22 Temp & Humid', 'category_id' => $categories['Sensors'], 'location_id' => $locations['Drawer B-2'], 'condition' => 'Broken', 'quantity' => 0, 'price' => 4.10],
-            ['component_id' => 'MCU-0922', 'name' => 'Raspberry Pi Pico W', 'category_id' => $categories['Microcontrollers'], 'location_id' => $locations['Drawer A-2'], 'condition' => 'Good', 'quantity' => 45, 'price' => 6.00],
-            ['component_id' => 'SNR-8821', 'name' => 'Ultrasonic Sensor HC-SR04', 'category_id' => $categories['Sensors'], 'location_id' => $locations['Box 03'], 'condition' => 'Low Stock', 'quantity' => 328, 'price' => 2.10],
-        ];
+        while (($row = fgetcsv($file)) !== false) {
+            // ID_Barang,Nama_Spesifikasi,Kategori,Jumlah,Satuan,Kondisi,Lokasi,Terakhir_Update,Catatan
+            if (count($row) < 7) continue;
 
-        foreach ($items as $item) {
-            InventoryItem::firstOrCreate(
-                ['component_id' => $item['component_id']],
-                $item
+            $componentId = $row[0];
+            $name = $row[1];
+            $categoryName = trim($row[2]);
+            $quantity = (int)$row[3];
+            $condition = trim($row[5]);
+            $locationName = trim($row[6]);
+
+            // Create or get Category
+            $category = Category::firstOrCreate(['name' => $categoryName]);
+
+            // Create or get Location
+            $location = Location::firstOrCreate(['name' => $locationName]);
+
+            // Create or get Inventory Item
+            InventoryItem::updateOrCreate(
+                ['component_id' => $componentId],
+                [
+                    'name' => $name,
+                    'category_id' => $category->id,
+                    'location_id' => $location->id,
+                    'quantity' => $quantity,
+                    'condition' => $condition,
+                    'price' => 0, // Not available in CSV
+                ]
             );
         }
+
+        fclose($file);
     }
 }
